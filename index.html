@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Moppe Garage</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#17191d;color:white}
+header{padding:18px;text-align:center;background:#252931}
+h1{margin:0;font-size:28px}
+.sub{opacity:.7;margin-top:5px}
+main{max-width:900px;margin:auto;padding:16px}
+.garage{background:linear-gradient(#30343b,#17191d);border:3px solid #555;border-radius:20px;padding:20px;min-height:360px;text-align:center}
+.floor{margin-top:20px;border-top:5px solid #666;padding-top:20px}
+.moped{position:relative;height:210px;max-width:430px;margin:0 auto}
+.wheel{position:absolute;bottom:20px;width:70px;height:70px;border:12px solid #111;border-radius:50%;background:#777}
+.w1{left:45px}.w2{right:45px}
+.body{position:absolute;left:105px;top:75px;width:220px;height:60px;background:var(--bike,#e53935);border-radius:35px 45px 20px 25px;box-shadow:0 7px 0 #111}
+.seat{position:absolute;left:155px;top:52px;width:105px;height:25px;background:#111;border-radius:15px}
+.handle{position:absolute;right:62px;top:35px;width:65px;height:70px;border-right:8px solid #111;border-top:8px solid #111;transform:rotate(10deg)}
+.light{position:absolute;right:48px;top:70px;width:25px;height:25px;border-radius:50%;background:#ffe45c;border:4px solid #111}
+.exhaust{position:absolute;left:95px;top:132px;width:115px;height:12px;background:#aaa;border-radius:10px;transform:rotate(10deg)}
+.panel{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
+.card{background:#252931;border-radius:15px;padding:15px}
+button,select{width:100%;padding:12px;margin-top:8px;border:0;border-radius:10px;font-size:16px}
+button{background:#f0f0f0;color:#111;font-weight:bold}
+button:active{transform:scale(.98)}
+.stats{font-size:18px;line-height:1.8}
+.speed{font-size:38px;font-weight:bold}
+.test{background:#1f5eff;color:white}
+@media(max-width:650px){.panel{grid-template-columns:1fr}.garage{min-height:330px}}
+</style>
+</head>
+<body>
+<header>
+<h1>🛵 MOPPE GARAGE</h1>
+<div class="sub">Bygg din moppe och testa den</div>
+</header>
+
+<main>
+<section class="garage">
+<div class="moped" id="moped">
+<div class="wheel w1"></div><div class="wheel w2"></div>
+<div class="seat"></div><div class="handle"></div><div class="light"></div>
+<div class="exhaust"></div><div class="body"></div>
+</div>
+<div class="floor">🏁 GARAGE</div>
+</section>
+
+<section class="panel">
+<div class="card">
+<h2>🎨 Färg</h2>
+<select id="color">
+<option value="#e53935">Röd</option>
+<option value="#1976d2">Blå</option>
+<option value="#43a047">Grön</option>
+<option value="#f5c400">Gul</option>
+<option value="#111111">Svart</option>
+<option value="#eeeeee">Vit</option>
+</select>
+
+<h2>🔧 Rör</h2>
+<select id="pipe">
+<option value="0">Original</option>
+<option value="5">Sport</option>
+<option value="10">Racing</option>
+</select>
+</div>
+
+<div class="card">
+<h2>📊 Moppe-statistik</h2>
+<div class="stats">
+Toppfart: <span id="top">45</span> km/h<br>
+Acceleration: <span id="acc">50</span>/100
+</div>
+<button class="test" id="test">🏁 TESTKÖR</button>
+<div class="speed"><span id="speed">0</span> km/h</div>
+<div id="message">Tryck på TESTKÖR!</div>
+</div>
+</section>
+</main>
+
+<script>
+const body=document.querySelector('.body');
+const color=document.querySelector('#color');
+const pipe=document.querySelector('#pipe');
+const top=document.querySelector('#top');
+const acc=document.querySelector('#acc');
+const speed=document.querySelector('#speed');
+const message=document.querySelector('#message');
+
+function update(){
+  body.style.setProperty('background',color.value);
+  const bonus=Number(pipe.value);
+  top.textContent=45+bonus;
+  acc.textContent=50+bonus*3;
+}
+color.addEventListener('change',update);
+pipe.addEventListener('change',update);
+
+document.querySelector('#test').addEventListener('click',()=>{
+  let s=0;
+  message.textContent='Moppen accelererar...';
+  const target=Number(top.textContent);
+  const timer=setInterval(()=>{
+    s+=Math.max(1,Math.round(Number(acc.textContent)/25));
+    if(s>=target){s=target;clearInterval(timer);message.textContent='🏁 Toppfart nådd!';}
+    speed.textContent=s;
+  },120);
+});
+update();
+</script>
+</body>
+</html>
